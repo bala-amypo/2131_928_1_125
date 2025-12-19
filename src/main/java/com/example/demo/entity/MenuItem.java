@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,10 @@ public class MenuItem {
 
     private String name;
     private String description;
-    private double price;
+
+    @Column(nullable = false)
+    private BigDecimal price;
+
     private Boolean active = true;
 
     @ManyToMany
@@ -24,10 +28,9 @@ public class MenuItem {
     )
     private List<Category> categories = new ArrayList<>();
 
-    // Constructors
     public MenuItem() { }
 
-    public MenuItem(String name, String description, double price) {
+    public MenuItem(String name, String description, BigDecimal price) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -44,11 +47,11 @@ public class MenuItem {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Double getPrice() { return price; }
-public void setPrice(Double price) { this.price = price; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
-public Double getSellingPrice() { return price; }
-public void setSellingPrice(Double sellingPrice) { this.price = sellingPrice; }
+    public BigDecimal getSellingPrice() { return price; }
+    public void setSellingPrice(BigDecimal sellingPrice) { this.price = sellingPrice; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }

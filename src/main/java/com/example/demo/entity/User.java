@@ -19,13 +19,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String fullName; // added for UserServiceImpl
+    private String fullName;
 
-    private String role; // added for role management (e.g., USER, MANAGER)
+    private String role; // e.g., USER, MANAGER
 
     private Boolean active = true;
 
-    // Constructors
     public User() { }
 
     public User(String username, String email, String password, String fullName, String role) {

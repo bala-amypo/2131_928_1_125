@@ -18,9 +18,7 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private List<MenuItem> menuItems = new ArrayList<>();
 
-    // Constructors
-    public Category() {
-    }
+    public Category() { }
 
     public Category(String name, String description) {
         this.name = name;
