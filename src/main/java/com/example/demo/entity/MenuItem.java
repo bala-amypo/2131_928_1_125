@@ -44,10 +44,11 @@ public class MenuItem {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public Double getPrice() { return price; }
+public void setPrice(Double price) { this.price = price; }
 
-    public double getSellingPrice() { return price; } // Used in service
+public Double getSellingPrice() { return price; }
+public void setSellingPrice(Double sellingPrice) { this.price = sellingPrice; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
