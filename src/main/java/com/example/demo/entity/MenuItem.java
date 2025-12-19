@@ -1,9 +1,8 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class MenuItem {
@@ -13,49 +12,46 @@ public class MenuItem {
     private Long id;
 
     private String name;
-    private String description; // required by MenuItemServiceImpl
+    private String description;
     private double price;
+    private Boolean active = true;
+
+    @ManyToMany
+    @JoinTable(
+        name = "menuitem_category",
+        joinColumns = @JoinColumn(name = "menuitem_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories = new ArrayList<>();
 
     // Constructors
-    public MenuItem() {
-    }
+    public MenuItem() { }
 
     public MenuItem(String name, String description, double price) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.active = true;
     }
 
     // Getters & Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
-    public String getDescription() {
-        return description;
-    }
+    public double getSellingPrice() { return price; } // Used in service
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
+    public List<Category> getCategories() { return categories; }
+    public void setCategories(List<Category> categories) { this.categories = categories; }
 }

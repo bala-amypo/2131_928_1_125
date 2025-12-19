@@ -38,6 +38,7 @@ public class Ingredient {
 
     // Getters & Setters
     public Long getId() { return id; }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
@@ -49,4 +50,7 @@ public class Ingredient {
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
+
+    public Timestamp getCreatedAt() { return createdAt; }
+    public Timestamp getUpdatedAt() { return updatedAt; }
 }
