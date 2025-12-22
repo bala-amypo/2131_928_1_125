@@ -5,13 +5,13 @@ import java.util.List;
 
 public interface MenuItemService {
 
-    MenuItem createMenuItem(MenuItem item);
+    MenuItem create(MenuItem item);
 
-    MenuItem updateMenuItem(Long id, MenuItem item);
+    MenuItem update(Long id, MenuItem item);
 
-    MenuItem getMenuItemById(Long id);
+    MenuItem getById(Long id);
 
-    List<MenuItem> getAllMenuItems();
+    List<MenuItem> getAll();
 
-    void deactivateMenuItem(Long id);
+    void deactivate(Long id);
 }

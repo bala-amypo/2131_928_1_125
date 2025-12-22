@@ -1,66 +1,87 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.*;
+import com.example.demo.entity.MenuItem;
+import com.example.demo.entity.ProfitCalculationRecord;
+import com.example.demo.entity.RecipeIngredient;
+import com.example.demo.entity.Ingredient;
+import com.example.demo.repository.MenuItemRepository;
+import com.example.demo.repository.RecipeIngredientRepository;
+import com.example.demo.repository.ProfitCalculationRecordRepository;
+import com.example.demo.service.ProfitCalculationService;
+
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
 public class ProfitCalculationServiceImpl implements ProfitCalculationService {
 
-    private final MenuItemRepository menuItemRepository;
-    private final RecipeIngredientRepository recipeIngredientRepository;
-    private final ProfitCalculationRecordRepository recordRepository;
+    private final MenuItemRepository menuRepo;
+    private final RecipeIngredientRepository recipeRepo;
+    private final ProfitCalculationRecordRepository recordRepo;
 
     public ProfitCalculationServiceImpl(
-            MenuItemRepository menuItemRepository,
-            RecipeIngredientRepository recipeIngredientRepository,
-            ProfitCalculationRecordRepository recordRepository) {
-        this.menuItemRepository = menuItemRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
-        this.recordRepository = recordRepository;
+            MenuItemRepository menuRepo,
+            RecipeIngredientRepository recipeRepo,
+            ProfitCalculationRecordRepository recordRepo
+    ){
+        this.menuRepo = menuRepo;
+        this.recipeRepo = recipeRepo;
+        this.recordRepo = recordRepo;
     }
 
     @Override
     public ProfitCalculationRecord calculateProfit(Long menuItemId) {
 
-        MenuItem menuItem = menuItemRepository.findById(menuItemId)
-                .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
+        MenuItem menuItem = menuRepo.findById(menuItemId)
+                .orElseThrow(() -> new RuntimeException("MenuItem not found"));
 
-        List<RecipeIngredient> ingredients =
-                recipeIngredientRepository.findByMenuItemId(menuItemId);
+        List<RecipeIngredient> recipeIngredients = recipeRepo.findByMenuItem(menuItem);
 
         BigDecimal totalCost = BigDecimal.ZERO;
 
-        for (RecipeIngredient ri : ingredients) {
-            BigDecimal cost = ri.getIngredient().getCostPerUnit()
-                    .multiply(BigDecimal.valueOf(ri.getQuantityRequired()));
-            totalCost = totalCost.add(cost);
+        for (RecipeIngredient ri : recipeIngredients) {
+
+            Ingredient ing = ri.getIngredient();
+
+            BigDecimal costPerUnit = ing.getCostPerUnit();
+            BigDecimal qtyGram = BigDecimal.valueOf(ri.getQuantityRequired());
+
+            BigDecimal qtyKg = qtyGram.divide(BigDecimal.valueOf(1000), 4, RoundingMode.HALF_UP);
+
+            BigDecimal ingredientCost = costPerUnit.multiply(qtyKg);
+
+            totalCost = totalCost.add(ingredientCost);
         }
+
+        BigDecimal sellingPrice = menuItem.getSellingPrice();
+        BigDecimal profit = sellingPrice.subtract(totalCost);
 
         ProfitCalculationRecord record = new ProfitCalculationRecord();
         record.setMenuItem(menuItem);
         record.setTotalCost(totalCost);
-        record.setProfitMargin(menuItem.getSellingPrice().subtract(totalCost));
+        record.setProfitMargin(profit);
+        record.setCalculatedAt(new Timestamp(System.currentTimeMillis()));
 
-        return recordRepository.save(record);
+        return recordRepo.save(record);
     }
 
     @Override
-    public ProfitCalculationRecord getCalculationById(Long id) {
-        return recordRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Profit calculation not found"));
+    public ProfitCalculationRecord getById(Long id) {
+        return recordRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Record not found"));
     }
 
     @Override
-    public List<ProfitCalculationRecord> getCalculationsForMenuItem(Long menuItemId) {
-        return recordRepository.findByMenuItemId(menuItemId);
+    public List<ProfitCalculationRecord> getHistoryByMenuItem(Long menuItemId) {
+        return recordRepo.findByMenuItemId(menuItemId);
     }
 
     @Override
-    public List<ProfitCalculationRecord> getAllCalculations() {
-        return recordRepository.findAll();
+    public List<ProfitCalculationRecord> getAll() {
+        return recordRepo.findAll();
     }
 }
