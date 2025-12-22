@@ -1,11 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.MenuItem;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.MenuItemRepository;
-import com.example.demo.repository.RecipeIngredientRepository;
+import com.example.demo.service.MenuItemService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,54 +10,49 @@ import java.util.List;
 @Service
 public class MenuItemServiceImpl implements MenuItemService {
 
-    private final MenuItemRepository menuItemRepository;
-    private final RecipeIngredientRepository recipeIngredientRepository;
-    private final CategoryRepository categoryRepository;
+    private final MenuItemRepository repo;
 
-    public MenuItemServiceImpl(
-            MenuItemRepository menuItemRepository,
-            RecipeIngredientRepository recipeIngredientRepository,
-            CategoryRepository categoryRepository) {
-        this.menuItemRepository = menuItemRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
-        this.categoryRepository = categoryRepository;
+    public MenuItemServiceImpl(MenuItemRepository repo){
+        this.repo = repo;
     }
 
     @Override
-    public MenuItem createMenuItem(MenuItem item) {
-        if (item.getSellingPrice() == null ||
-                item.getSellingPrice().doubleValue() <= 0) {
-            throw new BadRequestException("Selling price must be positive");
-        }
-        return menuItemRepository.save(item);
+    public MenuItem create(MenuItem item){
+        item.setActive(true);
+        return repo.save(item);
     }
 
     @Override
-    public MenuItem updateMenuItem(Long id, MenuItem item) {
-        MenuItem existing = getMenuItemById(id);
-        existing.setName(item.getName());
-        existing.setDescription(item.getDescription());
-        existing.setSellingPrice(item.getSellingPrice());
-        existing.setCategories(item.getCategories());
-        return menuItemRepository.save(existing);
+    public MenuItem update(Long id, MenuItem updated){
+        MenuItem item = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu item not found"));
+
+        item.setName(updated.getName());
+        item.setDescription(updated.getDescription());
+        item.setSellingPrice(updated.getSellingPrice());
+        item.setCategories(updated.getCategories());
+
+        return repo.save(item);
     }
 
     @Override
-    public MenuItem getMenuItemById(Long id) {
-        return menuItemRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Menu item not found"));
+    public MenuItem getById(Long id){
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu item not found"));
     }
 
     @Override
-    public List<MenuItem> getAllMenuItems() {
-        return menuItemRepository.findAllActiveWithCategories();
+    public List<MenuItem> getAll(){
+        return repo.findAll();
     }
 
     @Override
-    public void deactivateMenuItem(Long id) {
-        MenuItem item = getMenuItemById(id);
+    public void deactivate(Long id){
+        MenuItem item = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu item not found"));
+
         item.setActive(false);
-        menuItemRepository.save(item);
+
+        repo.save(item);
     }
 }
