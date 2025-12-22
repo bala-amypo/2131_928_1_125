@@ -2,44 +2,42 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.MenuItem;
 import com.example.demo.service.MenuItemService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/menu-items")
-@Tag(name = "Menu Items")
 public class MenuItemController {
 
-    private final MenuItemService menuItemService;
+    private final MenuItemService service;
 
-    public MenuItemController(MenuItemService menuItemService) {
-        this.menuItemService = menuItemService;
+    public MenuItemController(MenuItemService service){
+        this.service = service;
     }
 
-    @PostMapping
-    public MenuItem create(@RequestBody MenuItem item) {
-        return menuItemService.createMenuItem(item);
+    @PostMapping("/")
+    public MenuItem create(@RequestBody MenuItem item){
+        return service.create(item);
     }
 
     @PutMapping("/{id}")
-    public MenuItem update(@PathVariable Long id, @RequestBody MenuItem item) {
-        return menuItemService.updateMenuItem(id, item);
+    public MenuItem update(@PathVariable Long id, @RequestBody MenuItem item){
+        return service.update(id, item);
     }
 
     @GetMapping("/{id}")
-    public MenuItem getById(@PathVariable Long id) {
-        return menuItemService.getMenuItemById(id);
+    public MenuItem get(@PathVariable Long id){
+        return service.getById(id);
     }
 
-    @GetMapping
-    public List<MenuItem> getAll() {
-        return menuItemService.getAllMenuItems();
+    @GetMapping("/")
+    public List<MenuItem> list(){
+        return service.getAll();
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
-        menuItemService.deactivateMenuItem(id);
+    public void deactivate(@PathVariable Long id){
+        service.deactivate(id);
     }
 }

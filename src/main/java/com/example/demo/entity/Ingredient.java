@@ -1,23 +1,23 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "ingredients", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class Ingredient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String name;
 
     private String unit;
 
-    @Column(nullable = false)
     private BigDecimal costPerUnit;
 
     private Boolean active = true;
@@ -26,31 +26,14 @@ public class Ingredient {
     private Timestamp updatedAt;
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate(){
         createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = createdAt;
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    public void onUpdate(){
         updatedAt = new Timestamp(System.currentTimeMillis());
     }
-
-    // Getters & Setters
-    public Long getId() { return id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getUnit() { return unit; }
-    public void setUnit(String unit) { this.unit = unit; }
-
-    public BigDecimal getCostPerUnit() { return costPerUnit; }
-    public void setCostPerUnit(BigDecimal costPerUnit) { this.costPerUnit = costPerUnit; }
-
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
-
-    public Timestamp getCreatedAt() { return createdAt; }
-    public Timestamp getUpdatedAt() { return updatedAt; }
 }
+

@@ -2,39 +2,37 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.ProfitCalculationRecord;
 import com.example.demo.service.ProfitCalculationService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/profit")
-@Tag(name = "Profit Calculations")
 public class ProfitCalculationController {
 
-    private final ProfitCalculationService profitCalculationService;
+    private final ProfitCalculationService service;
 
-    public ProfitCalculationController(ProfitCalculationService profitCalculationService) {
-        this.profitCalculationService = profitCalculationService;
+    public ProfitCalculationController(ProfitCalculationService service){
+        this.service = service;
     }
 
     @PostMapping("/calculate/{menuItemId}")
-    public ProfitCalculationRecord calculate(@PathVariable Long menuItemId) {
-        return profitCalculationService.calculateProfit(menuItemId);
+    public ProfitCalculationRecord calculate(@PathVariable Long menuItemId){
+        return service.calculateProfit(menuItemId);
     }
 
     @GetMapping("/{id}")
-    public ProfitCalculationRecord getById(@PathVariable Long id) {
-        return profitCalculationService.getCalculationById(id);
+    public ProfitCalculationRecord get(@PathVariable Long id){
+        return service.getById(id);
     }
 
     @GetMapping("/menu-item/{menuItemId}")
-    public List<ProfitCalculationRecord> getByMenuItem(@PathVariable Long menuItemId) {
-        return profitCalculationService.getCalculationsForMenuItem(menuItemId);
+    public List<ProfitCalculationRecord> listByMenu(@PathVariable Long menuItemId){
+        return service.getHistoryByMenuItem(menuItemId);
     }
 
-    @GetMapping
-    public List<ProfitCalculationRecord> getAll() {
-        return profitCalculationService.getAllCalculations();
+    @GetMapping("/")
+    public List<ProfitCalculationRecord> all(){
+        return service.getAll();
     }
 }
