@@ -1,29 +1,29 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.entity.User;
+import com.example.demo.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Authentication")
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
-
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
-        return userService.register(request);
+    public User register(@RequestBody User user) {
+        return authService.register(user);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequest request) {
-        return userService.login(request);
+    public User login(
+            @RequestParam String email,
+            @RequestParam String password) {
+
+        return authService.login(email, password);
     }
 }
