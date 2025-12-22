@@ -1,33 +1,21 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Table(name = "recipe_ingredients")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class RecipeIngredient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private MenuItem menuItem;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Ingredient ingredient;
 
-    @Column(nullable = false)
     private Double quantityRequired;
-
-    // Getters & Setters
-    public Long getId() { return id; }
-
-    public MenuItem getMenuItem() { return menuItem; }
-    public void setMenuItem(MenuItem menuItem) { this.menuItem = menuItem; }
-
-    public Ingredient getIngredient() { return ingredient; }
-    public void setIngredient(Ingredient ingredient) { this.ingredient = ingredient; }
-
-    public Double getQuantityRequired() { return quantityRequired; }
-    public void setQuantityRequired(Double quantityRequired) { this.quantityRequired = quantityRequired; }
 }
