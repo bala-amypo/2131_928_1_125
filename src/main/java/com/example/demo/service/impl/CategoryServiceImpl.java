@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Category;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.CategoryService;
 import org.springframework.stereotype.Service;
@@ -12,46 +14,50 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repo;
 
-    public CategoryServiceImpl(CategoryRepository repo){
+    public CategoryServiceImpl(CategoryRepository repo) {
         this.repo = repo;
     }
 
     @Override
-    public Category create(Category category){
-        category.setActive(true);
+    public Category createCategory(Category category) {
+        repo.findByNameIgnoreCase(category.getName())
+                .ifPresent(c -> {
+                    throw new BadRequestException("Category already exists");
+                });
         return repo.save(category);
     }
 
     @Override
-    public Category update(Long id, Category updated){
+    public Category updateCategory(long id, Category updated) {
+        Category existing = getCategoryById(id);
 
-        Category cat = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        if (updated.getName() != null)
+            existing.setName(updated.getName());
 
-        cat.setName(updated.getName());
-        cat.setDescription(updated.getDescription());
+        if (updated.getDescription() != null)
+            existing.setDescription(updated.getDescription());
 
-        return repo.save(cat);
+        if (updated.getActive() != null)
+            existing.setActive(updated.getActive());
+
+        return repo.save(existing);
     }
 
     @Override
-    public Category getById(Long id){
+    public Category getCategoryById(long id) {
         return repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     @Override
-    public List<Category> getAll(){
+    public List<Category> getAllCategories() {
         return repo.findAll();
     }
 
     @Override
-    public void deactivate(Long id){
-        Category c = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-
-        c.setActive(false);
-
-        repo.save(c);
+    public void deactivateCategory(long id) {
+        Category category = getCategoryById(id);
+        category.setActive(false);
+        repo.save(category);
     }
 }
