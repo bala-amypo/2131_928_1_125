@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Ingredient;
 import com.example.demo.service.IngredientService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,32 +14,34 @@ public class IngredientController {
 
     private final IngredientService service;
 
-    public IngredientController(IngredientService service){
+    public IngredientController(IngredientService service) {
         this.service = service;
     }
 
-    @PostMapping("/")
-    public Ingredient create(@RequestBody Ingredient ingredient){
-        return service.create(ingredient);
+    @PostMapping
+    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ingredient) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.createIngredient(ingredient));
     }
 
-    @PutMapping("/{id}")
-    public Ingredient update(@PathVariable Long id, @RequestBody Ingredient ingredient){
-        return service.update(id, ingredient);
+    @GetMapping
+    public ResponseEntity<List<Ingredient>> getAllIngredients() {
+        return ResponseEntity.ok(service.getAllIngredients());
     }
 
     @GetMapping("/{id}")
-    public Ingredient get(@PathVariable Long id){
-        return service.getById(id);
+    public ResponseEntity<Ingredient> getIngredientById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getIngredientById(id));
     }
 
-    @GetMapping("/")
-    public List<Ingredient> list(){
-        return service.getAll();
+    @PutMapping("/{id}")
+    public ResponseEntity<Ingredient> updateIngredient(@PathVariable long id,
+                                                       @RequestBody Ingredient ingredient) {
+        return ResponseEntity.ok(service.updateIngredient(id, ingredient));
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id){
-        service.deactivate(id);
+    public void deactivateIngredient(@PathVariable long id) {
+        service.deactivateIngredient(id);
     }
 }
