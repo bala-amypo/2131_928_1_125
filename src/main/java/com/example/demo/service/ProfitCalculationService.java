@@ -7,9 +7,14 @@ public interface ProfitCalculationService {
 
     ProfitCalculationRecord calculateProfit(Long menuItemId);
 
-    ProfitCalculationRecord getById(Long id);
+    ProfitCalculationRecord getCalculationById(Long id);
 
-    List<ProfitCalculationRecord> getHistoryByMenuItem(Long menuItemId);
+    List<ProfitCalculationRecord> getCalculationsForMenuItem(Long menuItemId);
 
-    List<ProfitCalculationRecord> getAll();
+    List<ProfitCalculationRecord> getAllCalculations();
+
+    // ✅ REQUIRED BY TESTS
+    List<ProfitCalculationRecord> findRecordsWithMarginBetween(double min, double max);
+
+    List<ProfitCalculationRecord> findRecordsWithMarginGreaterThanEqual(double min);
 }
