@@ -1,39 +1,38 @@
 package com.example.demo.entity;
+import java.math.BigDecimal;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 @Entity
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Table(name = "ingredients")
 public class Ingredient {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String name;
 
     private String unit;
 
+    // ✅ CHANGE HERE
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal costPerUnit;
 
     private Boolean active = true;
 
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    public Ingredient() {}
 
-    @PrePersist
-    public void onCreate(){
-        createdAt = new Timestamp(System.currentTimeMillis());
-        updatedAt = createdAt;
-    }
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getUnit() { return unit; }
+    public BigDecimal getCostPerUnit() { return costPerUnit; }
+    public Boolean getActive() { return active; }
 
-    @PreUpdate
-    public void onUpdate(){
-        updatedAt = new Timestamp(System.currentTimeMillis());
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setUnit(String unit) { this.unit = unit; }
+    public void setCostPerUnit(BigDecimal costPerUnit) { this.costPerUnit = costPerUnit; }
+    public void setActive(Boolean active) { this.active = active; }
 }
-
