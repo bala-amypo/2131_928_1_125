@@ -9,7 +9,7 @@ public class RegisterRequest {
 
     public RegisterRequest() {}
 
-    // ===== REQUIRED GETTERS =====
+   
 
     public String getFullName() {
         return fullName;

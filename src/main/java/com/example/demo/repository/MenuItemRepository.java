@@ -24,8 +24,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     @Override
     List<MenuItem> findAll();
 
-    // 🔥 REQUIRED BY HQL TEST
-    @Query("""
+    y("""
         SELECT DISTINCT m FROM MenuItem m
         LEFT JOIN FETCH m.categories
         WHERE m.active = true
