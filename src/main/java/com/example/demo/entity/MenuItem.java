@@ -49,7 +49,7 @@ public class MenuItem {
         updatedAt = LocalDateTime.now();
     }
 
-    // ===== GETTERS & SETTERS =====
+
 
     public Long getId() { return id; }
     public String getName() { return name; }

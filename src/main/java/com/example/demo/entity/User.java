@@ -29,7 +29,7 @@ public class User {
 
     public User() {}
 
-    // ===== REQUIRED GETTERS =====
+  
 
     public Long getId() {
         return id;

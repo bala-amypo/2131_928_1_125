@@ -16,7 +16,7 @@ public class Ingredient {
 
     private String unit;
 
-    // ✅ CHANGE HERE
+  
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal costPerUnit;
 
