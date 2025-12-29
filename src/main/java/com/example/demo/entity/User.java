@@ -59,7 +59,7 @@ public class User {
         return createdAt;
     }
 
-    // ===== REQUIRED SETTERS =====
+ 
 
     public void setId(Long id) {
         this.id = id;

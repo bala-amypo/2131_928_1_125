@@ -12,7 +12,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
     Optional<MenuItem> findByNameIgnoreCase(String name);
 
-    // 🔥 REQUIRED FOR UPDATE TESTS
+ 
     @Query("""
         SELECT m FROM MenuItem m
         LEFT JOIN FETCH m.categories
@@ -20,7 +20,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     """)
     Optional<MenuItem> findByIdWithCategories(@Param("id") Long id);
 
-    // 🔥 REQUIRED FOR getAllMenuItems test
+   
     @Override
     List<MenuItem> findAll();
 
