@@ -12,7 +12,6 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
     Optional<MenuItem> findByNameIgnoreCase(String name);
 
- 
     @Query("""
         SELECT m FROM MenuItem m
         LEFT JOIN FETCH m.categories
@@ -20,11 +19,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     """)
     Optional<MenuItem> findByIdWithCategories(@Param("id") Long id);
 
-   
-    @Override
-    List<MenuItem> findAll();
-
-    y("""
+    @Query("""
         SELECT DISTINCT m FROM MenuItem m
         LEFT JOIN FETCH m.categories
         WHERE m.active = true
